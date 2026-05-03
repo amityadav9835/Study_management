@@ -14,6 +14,7 @@ import ReviewSlider from '../components/common/ReviewSlider'
 import Course_Slider from '../components/core/Catalog/Course_Slider'
 
 import { getCatalogPageData } from '../services/operations/pageAndComponentData'
+import { fetchCourseCategories } from '../services/operations/courseDetailsAPI'
 
 import { MdOutlineRateReview } from 'react-icons/md'
 import { FaArrowRight } from "react-icons/fa"
@@ -49,10 +50,6 @@ const randomImges = [
     backgroundImg111,
 ];
 
-// hardcoded
-
-
-
 const Home = () => {
 
     // get background random images
@@ -67,20 +64,24 @@ const Home = () => {
 
     // get courses data
     const [CatalogPageData, setCatalogPageData] = useState(null);
-    const categoryID = "6506c9dff191d7ffdb4a3fe2" // hard coded
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchCatalogPageData = async () => {
+            try {
+                const categories = await fetchCourseCategories();
+                const categoryID = categories?.[0]?._id;
 
-            const result = await getCatalogPageData(categoryID, dispatch);
-            setCatalogPageData(result);
-            // console.log("page data ==== ",CatalogPageData);
+                if (!categoryID) return;
+
+                const result = await getCatalogPageData(categoryID, dispatch);
+                setCatalogPageData(result);
+            } catch (error) {
+                console.log("Could not fetch homepage course data", error);
+            }
         }
-        if (categoryID) {
-            fetchCatalogPageData();
-        }
-    }, [categoryID])
+        fetchCatalogPageData();
+    }, [dispatch])
 
 
     // console.log('================ CatalogPageData?.selectedCourses ================ ', CatalogPageData)
@@ -218,13 +219,19 @@ const Home = () => {
                     {/* course slider */}
                     <div className='mx-auto box-content w-full max-w-maxContentTab px- py-12 lg:max-w-maxContent'>
                         <h2 className='text-white mb-6 text-2xl '>
-                            Popular Picks for You 🏆
+                            Popular Picks for You
                         </h2>
-                        <Course_Slider Courses={CatalogPageData?.selectedCategory?.courses} />
+                        <Course_Slider
+                            Courses={
+                                CatalogPageData?.selectedCategory?.courses?.length
+                                    ? CatalogPageData.selectedCategory.courses
+                                    : CatalogPageData?.mostSellingCourses
+                            }
+                        />
                     </div>
                     <div className=' mx-auto box-content w-full max-w-maxContentTab px- py-12 lg:max-w-maxContent'>
                         <h2 className='text-white mb-6 text-2xl '>
-                            Top Enrollments Today 🔥
+                            Top Enrollments Today
                         </h2>
                         <Course_Slider Courses={CatalogPageData?.mostSellingCourses} />
                     </div>
@@ -263,7 +270,7 @@ const Home = () => {
 
                             <div className='flex flex-col gap-10 w-full lg:w-[40%] items-start'>
                                 <div className='text-[16px]'>
-                                    The modern StudyNotion is the dictates its own terms. Today, to be a competitive specialist requires more than professional skills.
+                                    The modern Study-Easy learner grows on their own terms. Today, to be a competitive specialist requires more than professional skills.
                                 </div>
                                 <CTAButton active={true} linkto={"/signup"}>
                                     <div>

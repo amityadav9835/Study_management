@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from "react"
-
-
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/free-mode"
@@ -14,9 +11,11 @@ import Course_Card from "./Course_Card"
 
 
 function Course_Slider({ Courses }) {
+  const hasLoaded = Array.isArray(Courses)
+
   return (
     <>
-      {Courses?.length ? (
+      {Courses?.length > 0 ? (
         <Swiper
           slidesPerView={1}
           spaceBetween={25}
@@ -36,6 +35,10 @@ function Course_Slider({ Courses }) {
             </SwiperSlide>
           ))}
         </Swiper>
+      ) : hasLoaded ? (
+        <div className="flex h-[201px] items-center justify-center rounded-xl border border-richblack-700 text-richblack-300">
+          No courses available
+        </div>
       ) : (
         <div className="flex flex-col sm:flex-row gap-6 ">
           <p className=" h-[201px] w-full rounded-xl  skeleton"></p>

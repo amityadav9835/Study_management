@@ -122,7 +122,6 @@ function CourseDetails() {
 
   // extract course data
   const {
-    _id: course_id,
     courseName,
     courseDescription,
     thumbnail,
@@ -134,7 +133,7 @@ function CourseDetails() {
     studentsEnrolled,
     createdAt,
     tag
-  } = response?.data?.courseDetails
+  } = response.data.courseDetails
 
   // Buy Course handler
   const handleBuyCourse = () => {

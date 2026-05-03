@@ -11,11 +11,13 @@ import UpdatePassword from "./pages/UpdatePassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import TextSummarizer from "./pages/TextSummarizer";
 import PageNotFound from "./pages/PageNotFound";
 import CourseDetails from './pages/CourseDetails';
 import Catalog from './pages/Catalog';
  
 import Navbar from "./components/common/Navbar"
+import HelpChatbot from "./components/common/HelpChatbot";
 
 import OpenRoute from "./components/core/Auth/OpenRoute"
 import ProtectedRoute from "./components/core/Auth/ProtectedRoute";
@@ -79,6 +81,7 @@ function App() {
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
       <Navbar />
+      <HelpChatbot />
 
       {/* go upward arrow */}
       <button onClick={() => window.scrollTo(0, 0)}
@@ -90,6 +93,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/summarizer" element={<TextSummarizer />} />
         <Route path="catalog/:catalogName" element={<Catalog />} />
         <Route path="courses/:courseId" element={<CourseDetails />} />
 
@@ -154,6 +158,7 @@ function App() {
             <>
               <Route path="dashboard/cart" element={<Cart />} />
               <Route path="dashboard/enrolled-courses" element={<EnrolledCourses />} />
+              <Route path="dashboard/purchase-history" element={<EnrolledCourses />} />
             </>
           )}
 

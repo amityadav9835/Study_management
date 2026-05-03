@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ProgressBar from "@ramonak/react-progress-bar"
 import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 import Img from './../../common/Img';
@@ -11,8 +11,11 @@ import Img from './../../common/Img';
 export default function EnrolledCourses() {
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [enrolledCourses, setEnrolledCourses] = useState(null)
+  const isPurchaseHistory = location.pathname.includes("purchase-history")
+  const hasFetchedCourses = useRef(false)
 
   // fetch all users enrolled courses
   const getEnrolledCourses = async () => {
@@ -25,6 +28,8 @@ export default function EnrolledCourses() {
   };
 
   useEffect(() => {
+    if (hasFetchedCourses.current) return
+    hasFetchedCourses.current = true
     getEnrolledCourses();
   }, [])
 
@@ -53,7 +58,7 @@ export default function EnrolledCourses() {
   if (enrolledCourses?.length == 0) {
     return (
       <p className="grid h-[50vh] w-full place-content-center text-center text-richblack-5 text-3xl">
-        You have not enrolled in any course yet.
+        You have not purchased any course yet.
       </p>)
   }
 
@@ -61,12 +66,14 @@ export default function EnrolledCourses() {
 
   return (
     <>
-      <div className="text-4xl text-richblack-5 font-boogaloo text-center sm:text-left">Enrolled Courses</div>
+      <div className="text-4xl text-richblack-5 font-boogaloo text-center sm:text-left">
+        {isPurchaseHistory ? "Purchase History" : "Enrolled Courses"}
+      </div>
       {
         <div className="my-8 text-richblack-5">
           {/* Headings */}
           <div className="flex rounded-t-2xl bg-richblack-800 ">
-            <p className="w-[45%] px-5 py-3">Course Name</p>
+            <p className="w-[45%] px-5 py-3">{isPurchaseHistory ? "Purchased Course" : "Course Name"}</p>
             <p className="w-1/4 px-2 py-3">Duration</p>
             <p className="flex-1 px-2 py-3">Progress</p>
           </div>

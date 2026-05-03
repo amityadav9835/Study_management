@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -13,7 +13,6 @@ import { AiOutlineCaretDown, AiOutlineHome } from "react-icons/ai"
 import { MdOutlineContactPhone } from "react-icons/md"
 import { TbMessage2Plus } from "react-icons/tb"
 import { PiNotebook } from "react-icons/pi"
-import { fetchCourseCategories } from './../../../services/operations/courseDetailsAPI';
 
 
 // const CatalogDropDown = ({ subLinks }) => {
@@ -29,43 +28,14 @@ import { fetchCourseCategories } from './../../../services/operations/courseDeta
 
 export default function MobileProfileDropDown() {
     const { user } = useSelector((state) => state.profile)
-    if (!user) return null
-    // console.log('user data from store = ', user )
-
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const ref = useRef(null)
+    const [open, setOpen] = useState(false)
 
     useOnClickOutside(ref, () => setOpen(false))
 
-
-    const [open, setOpen] = useState(false)
-    const [subLinks, setSubLinks] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-
-    const fetchSublinks = async () => {
-        try {
-            setLoading(true)
-            const res = await fetchCourseCategories();
-            // const result = await apiConnector("GET", categories.CATEGORIES_API);
-            // const result = await apiConnector('GET', 'http://localhost:4000/api/v1/course/showAllCategories');
-            // console.log("Printing Sublinks result:", result);
-            setSubLinks(res);
-        }
-        catch (error) {
-            console.log("Could not fetch the category list = ", error);
-        }
-        setLoading(false)
-    }
-
-    // console.log('data of store  = ', useSelector((state)=> state))
-
-
-    useEffect(() => {
-        fetchSublinks();
-    }, [])
-
+    if (!user) return null
 
     return (
 

@@ -28,6 +28,11 @@ export async function buyCourse(token, coursesId, userDetails, navigate, dispatc
     const toastId = toast.loading("Loading...");
 
     try {
+        const RAZORPAY_KEY = import.meta.env.VITE_APP_RAZORPAY_KEY;
+        if (!RAZORPAY_KEY) {
+            throw new Error("Razorpay key is missing in frontend .env");
+        }
+
         //load the script
         const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
@@ -47,7 +52,6 @@ export async function buyCourse(token, coursesId, userDetails, navigate, dispatc
             throw new Error(orderResponse.data.message);
         }
 
-        const RAZORPAY_KEY = import.meta.env.VITE_APP_RAZORPAY_KEY;
         // console.log("RAZORPAY_KEY...", RAZORPAY_KEY);
 
         // options
@@ -56,7 +60,7 @@ export async function buyCourse(token, coursesId, userDetails, navigate, dispatc
             currency: orderResponse.data.message.currency,
             amount: orderResponse.data.message.amount,
             order_id: orderResponse.data.message.id,
-            name: "StudyNotion",
+            name: "Study-Easy",
             description: "Thank You for Purchasing the Course",
             image: rzpLogo,
             prefill: {
@@ -81,10 +85,11 @@ export async function buyCourse(token, coursesId, userDetails, navigate, dispatc
     }
     catch (error) {
         console.log("PAYMENT API ERROR.....", error);
-        toast.error(error.response?.data?.message);
+        toast.error(error.response?.data?.message || error.message || "Could not make payment");
         // toast.error("Could not make Payment");
+    } finally {
+        toast.dismiss(toastId);
     }
-    toast.dismiss(toastId);
 }
 
 
@@ -118,7 +123,7 @@ async function verifyPayment(bodyData, token, navigate, dispatch) {
         if (!response.data.success) {
             throw new Error(response.data.message);
         }
-        toast.success("payment Successful, you are addded to the course");
+        toast.success("Payment successful, you are added to the course");
         navigate("/dashboard/enrolled-courses");
         dispatch(resetCart());
     }

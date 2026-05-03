@@ -27,10 +27,17 @@ function Catalog() {
         ; (async () => {
             try {
                 const res = await fetchCourseCategories();
-                const category_id = res.filter(
+                const category = res.find(
                     (ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName
-                )[0]._id
-                setCategoryId(category_id)
+                )
+
+                if (!category) {
+                    setCategoryId("")
+                    setCatalogPageData(null)
+                    return
+                }
+
+                setCategoryId(category._id)
             } catch (error) {
                 console.log("Could not fetch Categories.", error)
             }
@@ -123,16 +130,18 @@ function Catalog() {
             </div>
 
             {/* Section 2 */}
+            {catalogPageData?.differentCategory && (
             <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
                 <div className="section_heading">
-                    Top courses in {catalogPageData?.differentCategory?.name}
+                    Top courses in {catalogPageData.differentCategory.name}
                 </div>
                 <div>
                     <Course_Slider
-                        Courses={catalogPageData?.differentCategory?.courses}
+                        Courses={catalogPageData.differentCategory.courses}
                     />
                 </div>
             </div>
+            )}
 
             {/* Section 3 */}
             <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
