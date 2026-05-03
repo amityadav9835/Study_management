@@ -1,175 +1,243 @@
+# Study-Easy LMS
 
+Study-Easy is a full-stack learning management system built with the MERN stack. It allows students to browse, purchase, and consume courses, while instructors can create courses, manage content, and track their teaching activity.
 
-## 📝 Project Description  
-StudyNotion is a fully functional ed-tech platform that enables users to create, consume, and rate educational content.  
+Developed by **Amit Kumar**.
 
-The platform is built using the **MERN stack**:
-- MongoDB  
-- Express.js  
-- React.js  
-- Node.js  
+## Table of Contents
 
----
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Local Setup](#local-setup)
+- [Available Scripts](#available-scripts)
+- [Deployment](#deployment)
+- [License](#license)
 
-## 📌 Table of Contents  
+## Features
 
-- StudyNotion Aim  
-- Tech Stack  
-- System Architecture  
-- Features  
-- Backend Features  
-- Database Schema  
-- React Hooks  
-- React Libraries  
+### Student Features
 
----
+- User registration and login
+- OTP-based email verification
+- Course browsing and course details
+- Wishlist and cart management
+- Course purchase using Razorpay
+- Enrolled course access
+- Profile management
+- Course ratings and reviews
 
-## 🎯 StudyNotion Aim  
+### Instructor Features
 
-1. Provide a seamless and interactive learning experience for students.  
-2. Enable instructors to showcase expertise and connect with learners globally.  
+- Instructor dashboard
+- Course creation and editing
+- Section and subsection management
+- Video and media upload using Cloudinary
+- Course analytics and insights
+- Profile management
 
----
+### Backend Features
 
-## 💻 Tech Stack  
+- JWT-based authentication
+- Password reset flow
+- Role-based user workflows
+- Course, category, profile, and payment APIs
+- Razorpay payment integration
+- Cloudinary media storage
+- MongoDB data persistence
 
-### 🎨 Frontend  
-- React.js  
-- Vite  
-- Redux  
-- CSS  
-- Tailwind CSS  
+## Tech Stack
 
-### ⚙️ Backend  
-- Node.js  
-- Express.js  
+### Frontend
 
-### 🛢️ Database  
-- MongoDB  
+- React.js
+- Vite
+- Redux Toolkit
+- Tailwind CSS
+- React Router
+- Axios
 
-### ☁️ Cloud Integration  
-- Cloudinary  
+### Backend
 
----
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT
+- Nodemailer
+- Razorpay
+- Cloudinary
 
-## 🏰 System Architecture  
+## Project Structure
 
-StudyNotion follows a **client-server architecture** consisting of:
+```text
+Study-Notion-LMS/
+|-- backend/
+|   |-- config/
+|   |-- controllers/
+|   |-- middleware/
+|   |-- models/
+|   |-- routes/
+|   |-- utils/
+|   |-- .env.example
+|   |-- package.json
+|   `-- server.js
+|-- frontend/
+|   |-- public/
+|   |-- src/
+|   |-- .env.example
+|   |-- package.json
+|   |-- vite.config.js
+|   `-- vercel.json
+|-- render.yaml
+|-- LICENSE
+`-- README.md
+```
 
-### 🎨 Frontend  
-- Built with React.js  
-- Dynamic UI with responsive design  
-- Uses REST APIs to communicate with backend  
+## Environment Variables
 
-### ⚙️ Backend  
-- Built with Node.js and Express.js  
-- Handles:
-  - Authentication  
-  - Course management  
-  - Business logic  
-  - API services  
+Create `.env` files in both `backend` and `frontend` directories. Use the included `.env.example` files as templates.
 
-### 🛢️ Database  
-- MongoDB (NoSQL database)  
-- Stores:
-  - User data  
-  - Course data  
-  - Media references  
+### Backend
 
----
+```env
+PORT=5000
+DATABASE_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=http://localhost:5173
 
-## 🚀 Features  
+CLOUD_NAME=your_cloudinary_cloud_name
+API_KEY=your_cloudinary_api_key
+API_SECRET=your_cloudinary_api_secret
 
-### 👨‍🎓 For Students  
-- Homepage  
-- Course Listing  
-- Wishlist  
-- Cart & Checkout  
-- Course Content Access  
-- Profile Management  
+MAIL_HOST=your_mail_host
+MAIL_USER=your_mail_user
+MAIL_PASS=your_mail_password
 
-### 👩‍🏫 For Instructors  
-- Dashboard  
-- Course Insights  
-- Course Management (CRUD)  
-- Profile Management  
+RAZORPAY_KEY=your_razorpay_key
+RAZORPAY_SECRET=your_razorpay_secret
+```
 
----
+### Frontend
 
-## 🔐 Backend Features  
+```env
+VITE_APP_BASE_URL=http://localhost:5000/api/v1
+VITE_APP_RAZORPAY_KEY=your_razorpay_key
+```
 
-- User Authentication (Login/Signup)  
-- OTP Verification  
-- Forgot Password System  
-- Course Creation & Management  
-- Course Rating & Reviews  
-- Payment Integration (Razorpay)  
-- Cloudinary Media Storage  
-- Markdown Support for Course Content  
+## Local Setup
 
----
+### 1. Clone the repository
 
-## 🗂️ Database Schema  
+```bash
+git clone <repository-url>
+cd Study-Notion-LMS
+```
 
-### 👨‍🎓 Student Schema  
-- Name  
-- Email  
-- Password  
-- Enrolled Courses  
+### 2. Install backend dependencies
 
-### 👩‍🏫 Instructor Schema  
-- Name  
-- Email  
-- Password  
-- Created Courses  
+```bash
+cd backend
+npm install
+```
 
-### 📚 Course Schema  
-- Course Name  
-- Description  
-- Instructor Info  
-- Media Content  
-- Pricing  
+### 3. Install frontend dependencies
 
----
+```bash
+cd ../frontend
+npm install
+```
 
-## 🎣 React Hooks Used  
+### 4. Configure environment variables
 
-- useState  
-- useEffect  
-- useDispatch  
-- useSelector  
-- useParams  
-- useLocation  
-- useNavigate  
-- useRef  
-- useForm  
-- useDropzone  
-- Custom Hooks  
+Create the following files:
 
----
+- `backend/.env`
+- `frontend/.env`
 
-## 📚 React Libraries  
+Copy the variables from `.env.example` files and fill in your own credentials.
 
-- Lazy Loading (react-lazy-load-image)  
-- Chart.js  
-- Framer Motion  
-- React Dropzone  
-- React Hot Toast  
-- React OTP Input  
-- React Super Responsive Table  
-- Swiper  
-- React Type Animation  
-- Video React  
+### 5. Start the backend
 
----
+```bash
+cd backend
+npm run dev
+```
 
-## ⭐ Why This Project is Strong for Placement  
+The backend runs on `http://localhost:5000` by default.
 
-This project demonstrates:  
-- Full-stack development (MERN)  
-- Authentication & security  
-- Payment integration  
-- Real-world scalable architecture  
-- State management (Redux)  
-- API design & integration  
-- Cloud media handling  
+### 6. Start the frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend runs on `http://localhost:5173` by default.
+
+## Available Scripts
+
+### Backend
+
+```bash
+npm run dev
+npm start
+```
+
+### Frontend
+
+```bash
+npm run dev
+npm run build
+npm run preview
+npm run lint
+```
+
+## Deployment
+
+This project is designed for split deployment:
+
+- Deploy `backend` as a Node.js web service.
+- Deploy `frontend` as a static Vite site.
+
+### Render Deployment
+
+The repository includes a `render.yaml` blueprint.
+
+1. Push the repository to GitHub.
+2. Open Render and create a new Blueprint.
+3. Select this repository.
+4. Add all required backend environment variables from `backend/.env.example`.
+5. Add all required frontend environment variables from `frontend/.env.example`.
+6. Set backend `FRONTEND_URL` to your deployed frontend URL.
+7. Set frontend `VITE_APP_BASE_URL` to your deployed backend URL followed by `/api/v1`.
+
+Example:
+
+```env
+VITE_APP_BASE_URL=https://your-backend-service.onrender.com/api/v1
+FRONTEND_URL=https://your-frontend-service.onrender.com
+```
+
+### Vercel Frontend Deployment
+
+The frontend includes `frontend/vercel.json` for React Router refresh support.
+
+Use these settings on Vercel:
+
+```text
+Root Directory: frontend
+Build Command: npm run build
+Output Directory: dist
+```
+
+Set this frontend environment variable:
+
+```env
+VITE_APP_BASE_URL=https://your-backend-service-url/api/v1
+```
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

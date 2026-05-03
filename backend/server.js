@@ -16,6 +16,7 @@ const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
 const paymentRoutes = require('./routes/payments');
 const courseRoutes = require('./routes/course');
+const defaultCategories = require('./config/defaultCategories');
 
 
 // middleware 
@@ -23,8 +24,7 @@ app.use(express.json()); // to parse json body
 app.use(cookieParser());
 app.use(
     cors({
-        // origin: 'http://localhost:5173', // frontend link
-        origin: "*",
+        origin: process.env.FRONTEND_URL || "*",
         credentials: true
     })
 );
@@ -44,6 +44,7 @@ app.listen(PORT, () => {
 
 // connections
 connectDB();
+defaultCategories();
 cloudinaryConnect();
 
 // mount route

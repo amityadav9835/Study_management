@@ -15,7 +15,7 @@ exports.createRating = async (req, res) => {
         if (!rating || !review || !courseId) {
             return res.status(401).json({
                 success: false,
-                message: "All fileds are required"
+                message: "All fields are required"
             });
         }
 

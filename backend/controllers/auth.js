@@ -23,7 +23,7 @@ exports.sendOTP = async (req, res) => {
 
         // if exist then response
         if (checkUserPresent) {
-            console.log('(when otp generate) User alreay registered')
+            console.log('(when otp generate) User already registered')
             return res.status(401).json({
                 success: false,
                 message: 'User is Already Registered'
@@ -63,7 +63,7 @@ exports.sendOTP = async (req, res) => {
         res.status(200).json({
             success: false,
             message: 'Error while generating Otp',
-            error: error.mesage
+            error: error.message
         });
     }
 }
@@ -88,7 +88,7 @@ exports.signup = async (req, res) => {
         if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
-                messgae: 'passowrd & confirm password does not match, Please try again..!'
+                message: 'Password and confirm password do not match, please try again'
             });
         }
 
@@ -136,8 +136,7 @@ exports.signup = async (req, res) => {
             gender: null, dateOfBirth: null, about: null, contactNumber: null
         });
 
-        let approved = "";
-        approved === "Instructor" ? (approved = false) : (approved = true);
+        const approved = accountType === "Instructor" ? false : true;
 
         // create entry in DB
         const userData = await User.create({
@@ -160,7 +159,7 @@ exports.signup = async (req, res) => {
         res.status(401).json({
             success: false,
             error: error.message,
-            messgae: 'User cannot be registered , Please try again..!'
+            message: 'User cannot be registered, please try again'
         })
     }
 }
@@ -236,7 +235,7 @@ exports.login = async (req, res) => {
         res.status(500).json({
             success: false,
             error: error.message,
-            messgae: 'Error while Login user'
+            message: 'Error while logging in user'
         })
     }
 }
@@ -252,14 +251,14 @@ exports.changePassword = async (req, res) => {
         if (!oldPassword || !newPassword || !confirmNewPassword) {
             return res.status(403).json({
                 success: false,
-                message: 'All fileds are required'
+                message: 'All fields are required'
             });
         }
 
         // get user
         const userDetails = await User.findById(req.user.id);
 
-        // validate old passowrd entered correct or not
+        // validate old password entered correct or not
         const isPasswordMatch = await bcrypt.compare(
             oldPassword,
             userDetails.password
@@ -315,17 +314,17 @@ exports.changePassword = async (req, res) => {
         // return success response
         res.status(200).json({
             success: true,
-            mesage: 'Password changed successfully'
+            message: 'Password changed successfully'
         });
     }
 
     catch (error) {
-        console.log('Error while changing passowrd');
+        console.log('Error while changing password');
         console.log(error)
         res.status(500).json({
             success: false,
             error: error.message,
-            messgae: 'Error while changing passowrd'
+            message: 'Error while changing password'
         })
     }
 }

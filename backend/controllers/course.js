@@ -16,9 +16,19 @@ exports.createCourse = async (req, res) => {
         // extract data
         let { courseName, courseDescription, whatYouWillLearn, price, category, instructions: _instructions, status, tag: _tag } = req.body;
 
-        // Convert the tag and instructions from stringified Array to Array
-        const tag = JSON.parse(_tag)
-        const instructions = JSON.parse(_instructions)
+        // Convert the tag and instructions from stringified arrays to arrays.
+        let tag = []
+        let instructions = []
+
+        try {
+            tag = typeof _tag === "string" ? JSON.parse(_tag) : _tag
+            instructions = typeof _instructions === "string" ? JSON.parse(_instructions) : _instructions
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: "Tags and instructions must be valid arrays",
+            })
+        }
 
         // console.log("tag = ", tag)
         // console.log("instructions = ", instructions)
@@ -28,10 +38,10 @@ exports.createCourse = async (req, res) => {
 
         // validation
         if (!courseName || !courseDescription || !whatYouWillLearn || !price
-            || !category || !thumbnail || !instructions.length || !tag.length) {
+            || !category || !thumbnail || !Array.isArray(instructions) || !instructions.length || !Array.isArray(tag) || !tag.length) {
             return res.status(400).json({
                 success: false,
-                message: 'All Fileds are required'
+                message: 'All fields are required'
             });
         }
 
@@ -78,7 +88,7 @@ exports.createCourse = async (req, res) => {
         await Category.findByIdAndUpdate(
             { _id: category },
             {
-                $push: {
+                $addToSet: {
                     courses: newCourse._id,
                 },
             },

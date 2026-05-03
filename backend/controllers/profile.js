@@ -214,19 +214,30 @@ exports.getEnrolledCourses = async (req, res) => {
             })
             .exec()
 
+        if (!userDetails) {
+            return res.status(404).json({
+                success: false,
+                message: `Could not find user with id: ${userId}`,
+            })
+        }
+
         userDetails = userDetails.toObject()
+
+        userDetails.courses = userDetails.courses.filter(Boolean)
 
         var SubsectionLength = 0
         for (var i = 0; i < userDetails.courses.length; i++) {
             let totalDurationInSeconds = 0
             SubsectionLength = 0
-            for (var j = 0; j < userDetails.courses[i].courseContent.length; j++) {
-                totalDurationInSeconds += userDetails.courses[i].courseContent[
-                    j
-                ].subSection.reduce((acc, curr) => acc + parseInt(curr.timeDuration), 0)
+            const courseContent = userDetails.courses[i].courseContent || []
+
+            for (var j = 0; j < courseContent.length; j++) {
+                const subSections = courseContent[j]?.subSection || []
+
+                totalDurationInSeconds += subSections.reduce((acc, curr) => acc + (parseInt(curr?.timeDuration) || 0), 0)
 
                 userDetails.courses[i].totalDuration = convertSecondsToDuration(totalDurationInSeconds)
-                SubsectionLength += userDetails.courses[i].courseContent[j].subSection.length
+                SubsectionLength += subSections.length
             }
 
             let courseProgressCount = await CourseProgress.findOne({
@@ -234,7 +245,7 @@ exports.getEnrolledCourses = async (req, res) => {
                 userId: userId,
             })
 
-            courseProgressCount = courseProgressCount?.completedVideos.length
+            courseProgressCount = courseProgressCount?.completedVideos.length || 0
 
             if (SubsectionLength === 0) {
                 userDetails.courses[i].progressPercentage = 100
@@ -244,13 +255,6 @@ exports.getEnrolledCourses = async (req, res) => {
                 userDetails.courses[i].progressPercentage =
                     Math.round((courseProgressCount / SubsectionLength) * 100 * multiplier) / multiplier
             }
-        }
-
-        if (!userDetails) {
-            return res.status(400).json({
-                success: false,
-                message: `Could not find user with id: ${userDetails}`,
-            })
         }
 
         return res.status(200).json({

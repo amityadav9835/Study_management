@@ -50,15 +50,15 @@ exports.showAllCategories = async (req, res) => {
         res.status(200).json({
             success: true,
             data: allCategories,
-            message: 'All allCategories fetched successfully'
+            message: 'All categories fetched successfully'
         })
     }
     catch (error) {
-        console.log('Error while fetching all allCategories');
+        console.log('Error while fetching all categories');
         console.log(error);
         res.status(500).json({
             success: false,
-            message: 'Error while fetching all allCategories'
+            message: 'Error while fetching all categories'
         })
     }
 }
@@ -71,12 +71,22 @@ exports.getCategoryPageDetails = async (req, res) => {
         const { categoryId } = req.body
         // console.log("PRINTING CATEGORY ID: ", categoryId);
 
+        if (!categoryId) {
+            return res.status(400).json({
+                success: false,
+                message: "Category id is required",
+            })
+        }
+
         // Get courses for the specified category
         const selectedCategory = await Category.findById(categoryId)
             .populate({
                 path: "courses",
                 match: { status: "Published" },
-                populate: "ratingAndReviews",
+                populate: [
+                    { path: "ratingAndReviews" },
+                    { path: "instructor", select: "firstName lastName email image" },
+                ],
             })
             .exec()
 
@@ -89,30 +99,26 @@ exports.getCategoryPageDetails = async (req, res) => {
 
 
 
-        // Handle the case when there are no courses
-        if (selectedCategory.courses.length === 0) {
-            // console.log("No courses found for the selected category.")
-            return res.status(404).json({
-                success: false,
-                data: null,
-                message: "No courses found for the selected category.",
-            })
-        }
-
         // Get courses for other categories
         const categoriesExceptSelected = await Category.find({
             _id: { $ne: categoryId },
         })
-
-        let differentCategory = await Category.findOne(
-            categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
-                ._id
-        )
             .populate({
                 path: "courses",
                 match: { status: "Published" },
+                populate: [
+                    { path: "ratingAndReviews" },
+                    { path: "instructor", select: "firstName lastName email image" },
+                ],
             })
             .exec()
+
+        let differentCategory = null;
+
+        if (categoriesExceptSelected.length > 0) {
+            differentCategory =
+                categoriesExceptSelected.find((category) => category.courses.length > 0) || null
+        }
 
         //console.log("Different COURSE", differentCategory)
         // Get top-selling courses across all categories
@@ -122,13 +128,14 @@ exports.getCategoryPageDetails = async (req, res) => {
                 match: { status: "Published" },
                 populate: {
                     path: "instructor",
+                    select: "firstName lastName email image",
                 },
             })
             .exec()
 
         const allCourses = allCategories.flatMap((category) => category.courses)
         const mostSellingCourses = allCourses
-            .sort((a, b) => b.sold - a.sold)
+            .sort((a, b) => (b.studentsEnrolled?.length || 0) - (a.studentsEnrolled?.length || 0))
             .slice(0, 10)
 
         // console.log("mostSellingCourses COURSE", mostSellingCourses)
