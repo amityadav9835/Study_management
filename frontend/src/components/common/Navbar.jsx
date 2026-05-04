@@ -18,6 +18,7 @@ const Navbar = () => {
     // console.log("Printing base url: ", import.meta.env.VITE_APP_BASE_URL);
     const { token } = useSelector((state) => state.auth);
     const { user } = useSelector((state) => state.profile);
+    const isLoggedIn = token !== null && user !== null;
     // console.log('USER data from Navbar (store) = ', user)
     const { totalItems } = useSelector((state) => state.cart)
     const location = useLocation();
@@ -150,7 +151,7 @@ const Navbar = () => {
                 {/* Login/SignUp/Dashboard */}
                 <div className='flex gap-x-4 items-center'>
                     {
-                        user && user?.accountType !== "Instructor" && (
+                        isLoggedIn && user?.accountType !== "Instructor" && (
                             <Link to="/dashboard/cart" className="relative">
                                 <AiOutlineShoppingCart className="text-[2.35rem] text-richblack-5 hover:bg-richblack-700 rounded-full p-2 duration-200" />
                                 {totalItems > 0 && (
@@ -162,7 +163,7 @@ const Navbar = () => {
                         )
                     }
                     {
-                        token === null && (
+                        !isLoggedIn && (
                             <Link to="/login">
                                 {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
                                 <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
@@ -174,7 +175,7 @@ const Navbar = () => {
                         )
                     }
                     {
-                        token === null && (
+                        !isLoggedIn && (
                             <Link to="/signup">
                                 {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md'> */}
                                 <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
@@ -187,10 +188,10 @@ const Navbar = () => {
                     }
 
                     {/* for large devices */}
-                    {token !== null && <ProfileDropDown />}
+                    {isLoggedIn && <ProfileDropDown />}
 
                     {/* for small devices */}
-                    {token !== null && <MobileProfileDropDown />}
+                    {isLoggedIn && <MobileProfileDropDown />}
 
                 </div>
             </div>

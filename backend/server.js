@@ -22,23 +22,7 @@ const defaultCategories = require('./config/defaultCategories');
 // middleware 
 app.use(express.json()); // to parse json body
 app.use(cookieParser());
-const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    'http://localhost:5173',
-    'http://localhost:3000',
-].filter(Boolean);
-
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
-                return callback(null, true);
-            }
-            return callback(new Error('Not allowed by CORS'));
-        },
-        credentials: true
-    })
-);
+app.use(cors());
 app.use(
     fileUpload({
         useTempFiles: true,
@@ -59,10 +43,10 @@ defaultCategories();
 cloudinaryConnect();
 
 // mount route
-app.use('/auth', userRoutes);
-app.use('/profile', profileRoutes);
-app.use('/payment', paymentRoutes);
-app.use('/course', courseRoutes);
+app.use('/api/v1/auth', userRoutes);
+app.use('/api/v1/profile', profileRoutes);
+app.use('/api/v1/payment', paymentRoutes);
+app.use('/api/v1/course', courseRoutes);
 
 
 

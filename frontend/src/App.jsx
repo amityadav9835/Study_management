@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Route, Routes, useLocation, Link } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import Home from "./pages/Home"
@@ -149,8 +149,9 @@ function App() {
           </ProtectedRoute>
         }
         >
+          <Route path="dashboard" element={<Navigate to="/dashboard/my-profile" replace />} />
           <Route path="dashboard/my-profile" element={<MyProfile />} />
-          <Route path="dashboard/Settings" element={<Settings />} />
+          <Route path="dashboard/settings" element={<Settings />} />
 
           {/* Route only for Students */}
           {/* cart , EnrolledCourses */}
